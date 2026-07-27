@@ -723,7 +723,12 @@ function initScene2() {
   }
   requestAnimationFrame(animate);
 
-  /* ======== 10. 预加载音频 ======== */
+  /* ======== 10. 8秒无挥手自动推进（独立于摄像头） ======== */
+  scene2Data._autoTimer = setTimeout(() => {
+    if (scene2Phase === 'tree') { triggerParticleExplode(); }
+  }, 8000);
+
+  /* ======== 11. 预加载音频 ======== */
   preloadAudio();
 
   /* ======== 11. 播放键点击（HTML 元素） ======== */
@@ -754,12 +759,6 @@ function initScene2() {
       if (!camOk) { enableFallback(); return; }
       const handsOk = initHands();
       if (!handsOk) enableFallback();
-      // 6 秒挥手超时 → 自动进入下一阶段
-      scene2Data._autoTimer = setTimeout(() => {
-        if (scene2Phase === 'tree' && gestureState === 'IDLE') {
-          triggerParticleExplode();
-        }
-      }, 6000);
     }).catch(() => enableFallback());
   }
 

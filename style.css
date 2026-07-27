@@ -1,0 +1,1261 @@
+/* ============================================
+   全局重置 & 粉嫩可爱风背景
+   ============================================ */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;                    /* 禁止页面滚动 */
+  font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+body {
+  background:
+    radial-gradient(circle, rgba(255,255,255,0.5) 5px, transparent 5px),
+    linear-gradient(135deg, #ffe4ec 0%, #ffb6c1 40%, #ffc0cb 70%, #ffb3c6 100%);
+  background-size: 60px 60px, 100% 100%;
+  background-position: 0 0, 0 0;
+}
+
+/* ============================================
+   场景显示控制
+   ============================================ */
+
+.scene {
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;                    /* 防止绝对定位元素溢出 */
+}
+.scene.active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================
+   信封上方文案
+   ============================================ */
+
+.envelope-question {
+  font-family: 'ZCOOL KuaiLe', 'PingFang SC', 'Microsoft YaHei', cursive;
+  font-size: 28px;
+  color: #ff6290;
+  text-shadow:
+    0 0 10px rgba(255,255,255,0.9),
+    0 0 25px rgba(255,255,255,0.6),
+    0 0 40px rgba(255,150,180,0.4);
+  margin: 0 0 38px 0;
+  z-index: 5;
+  text-align: center;
+  padding: 0 16px;
+  animation: breathe 2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  user-select: none;
+  line-height: 1.4;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1);     opacity: 1; }
+  50%      { transform: scale(1.06);  opacity: 0.85; }
+}
+
+/* ============================================
+   小狗装饰图片（共用基类）
+   ============================================ */
+
+.scene-dog {
+  position: absolute;
+  max-width: 120px;
+  height: auto;
+  pointer-events: none;                /* 不干扰按钮交互 */
+  z-index: 1;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ---- 场景1：信封左侧（上下浮动） ---- */
+.dog-left-env {
+  top: 35%;
+  left: 6%;
+  animation: gentleFloat 3.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* ---- 场景1：信封右侧（左右摇摆） ---- */
+.dog-right-env {
+  top: 33%;
+  right: 6%;
+  animation: gentleSwing 3s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* ---- 场景1："愿意"按钮旁边（开心浮动） ---- */
+.dog-near-yes {
+  bottom: 16%;
+  left: calc(50% - 145px);
+  max-width: 100px;
+  animation: gentleFloat 2.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* ---- 场景1："不愿意"按钮旁边（调皮摇摆） ---- */
+.dog-near-no {
+  bottom: 16%;
+  right: calc(50% - 145px);
+  max-width: 100px;
+  animation: gentleSwing 2.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* ---- 场景1：角落点缀 ---- */
+.dog-corner {
+  bottom: 5%;
+  right: 4%;
+  max-width: 85px;
+  opacity: 0.75;
+  animation: gentleFloat 4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* ---- 场景2：右下角小狗 ---- */
+.dog-scene2 {
+  bottom: 14%;
+  right: 6%;
+  max-width: 100px;
+  animation: gentleFloat 3s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* ---- 场景1 新增位置 ---- */
+.dog-top-left {
+  top: 5%;
+  left: 5%;
+  max-width: 85px;
+  animation: gentleSwing 3.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.dog-bottom-left {
+  bottom: 8%;
+  left: 4%;
+  max-width: 90px;
+  animation: gentleFloat 3.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.dog-mid-right {
+  top: 22%;
+  right: 3%;
+  max-width: 80px;
+  animation: gentleFloat 3s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* ---- 场景2 新增位置 ---- */
+.dog-scene2-tl {
+  top: 6%;
+  left: 5%;
+  max-width: 85px;
+  animation: gentleSwing 3.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.dog-scene2-bl {
+  bottom: 22%;
+  left: 5%;
+  max-width: 80px;
+  animation: gentleFloat 3.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* ---- 场景3 卡片左右两侧 ---- */
+.dog-card-left {
+  top: 48%;
+  left: 2%;
+  max-width: 70px;
+  animation: gentleFloat 3s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.dog-card-right {
+  top: 48%;
+  right: 2%;
+  max-width: 70px;
+  animation: gentleSwing 3s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* ---- 场景3：卡片上方小狗（放大动画） ---- */
+.dog-above-card-wrap {
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+.dog-above-card-wrap .scene-dog {
+  position: static;
+  max-width: 110px;
+  animation: heartPop 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes heartPop {
+  0%, 100% { transform: scale(1); }
+  30%      { transform: scale(1.15); }
+  50%      { transform: scale(1); }
+  70%      { transform: scale(1.08); }
+  85%      { transform: scale(1); }
+}
+
+/* ---- 场景3：卡片下方两只小狗靠在一起 ---- */
+.dog-pair {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 1;
+}
+.dog-pair .scene-dog {
+  position: static;
+  max-width: 95px;
+}
+/* 第一只小狗微浮动 */
+.dog-pair .scene-dog:first-child {
+  animation: gentleFloat 3s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+/* 第二只小狗微摇摆 */
+.dog-pair .scene-dog:last-child {
+  animation: gentleSwing 3s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* ============================================
+   场景2 气泡文字
+   ============================================ */
+
+.speech-bubble {
+  position: absolute;
+  bottom: calc(14% + 85px);
+  right: calc(6% + 55px);
+  background: #fff;
+  color: #ff6290;
+  font-family: 'ZCOOL KuaiLe', 'PingFang SC', 'Microsoft YaHei', cursive;
+  font-size: 15px;
+  padding: 10px 18px;
+  border-radius: 22px;
+  box-shadow: 0 4px 18px rgba(255, 98, 144, 0.18);
+  z-index: 2;
+  white-space: nowrap;
+  user-select: none;
+  animation: breathe 2.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.speech-bubble.gone {
+  opacity: 0;
+  transform: scale(0.8) translateY(-10px);
+  animation: none;
+  pointer-events: none;
+}
+
+/* 气泡小三角（指向小狗） */
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 9px solid #fff;
+}
+
+/* ============================================
+   场景2 深色背景 & Three.js canvas 容器
+   ============================================ */
+
+#scene2 {
+  background: linear-gradient(180deg, #1a1025 0%, #2d1b3d 30%, #1a1230 60%, #0d0a1a 100%);
+}
+
+#camera-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+#particle-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#gesture-hint {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  color: rgba(255,255,255,0.8);
+  font-family: 'ZCOOL KuaiLe', 'PingFang SC', cursive;
+  font-size: 18px;
+  text-shadow: 0 0 10px rgba(255,150,200,0.6);
+  text-align: center;
+  pointer-events: none;
+}
+
+/* ---- 柔光光晕（暖金色径向渐变，覆盖 canvas 上方） ---- */
+.tree-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 60% 55% at 50% 45%,
+    rgba(255, 200, 120, 0.18) 0%,
+    rgba(255, 180, 100, 0.08) 30%,
+    rgba(255, 150, 80, 0.03) 55%,
+    transparent 75%
+  );
+}
+
+/* ---- 情话浮层 ---- */
+.love-message {
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  text-align: center;
+  pointer-events: none;
+  /* 初始透明，JS 添加 .visible 后淡入 */
+  opacity: 0;
+  transition: opacity 1s ease 1.5s;        /* 1.5s 延迟后 1s 淡入 */
+}
+
+/* 场景2激活后自动淡入（配合 animate.css fadeIn 的时机） */
+#scene2.active .love-message {
+  opacity: 1;
+}
+
+.love-text {
+  font-family: 'ZCOOL KuaiLe', 'PingFang SC', cursive;
+  font-size: 34px;
+  color: #ffd7a0;
+  margin: 0 0 8px 0;
+  white-space: nowrap;
+  animation: loveGlow 3s ease-in-out infinite;
+}
+
+@keyframes loveGlow {
+  0%, 100% { text-shadow: 0 0 15px rgba(255,200,100,0.5), 0 0 30px rgba(255,180,80,0.3); }
+  50%      { text-shadow: 0 0 25px rgba(255,200,100,0.7), 0 0 45px rgba(255,180,80,0.45); }
+}
+
+.love-sub {
+  font-family: 'ZCOOL KuaiLe', 'PingFang SC', cursive;
+  font-size: 15px;
+  color: rgba(255,210,160,0.65);
+  margin: 0;
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px rgba(255,180,100,0.35);
+}
+
+/* ---- 音频控制栏 ---- */
+#audio-controls {
+  position: absolute;
+  bottom: 14%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  background: rgba(30, 15, 40, 0.55);
+  backdrop-filter: blur(8px);
+  border-radius: 28px;
+  border: 1px solid rgba(255,180,120,0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+#audio-controls.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.audio-ctrl-btn {
+  width: 32px; height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,180,130,0.2);
+  color: #ffd7a0;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.audio-ctrl-btn:hover {
+  background: rgba(255,180,130,0.4);
+}
+
+.progress-wrap {
+  position: relative;
+  width: 180px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+}
+
+/* 进度条 — 自定义滑块 */
+#progress-bar {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255,200,150,0.2);
+  outline: none;
+  cursor: pointer;
+}
+
+#progress-bar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #ffd7a0;
+  box-shadow: 0 0 8px rgba(255,200,120,0.5);
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+
+#progress-bar::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 14px rgba(255,200,120,0.7);
+}
+
+#progress-bar::-moz-range-thumb {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #ffd7a0;
+  border: none;
+  box-shadow: 0 0 8px rgba(255,200,120,0.5);
+  cursor: pointer;
+}
+
+/* 进度条已播放部分用 accent 色 */
+#progress-bar::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+}
+
+#progress-bar::-moz-range-progress {
+  background: rgba(255,200,150,0.4);
+  height: 4px;
+  border-radius: 2px;
+}
+
+#time-display {
+  font-family: 'ZCOOL KuaiLe', 'PingFang SC', cursive;
+  font-size: 12px;
+  color: rgba(255,210,160,0.8);
+  white-space: nowrap;
+  min-width: 36px;
+  text-align: right;
+}
+
+/* ---- 播放键（HTML/CSS 绘制，粒子环绕中心） ---- */
+#play-btn {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  width: 90px;
+  height: 90px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+#play-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 播放键外圈光晕 */
+.play-btn-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,180,100,0.35) 0%, rgba(255,140,80,0.12) 40%, transparent 70%);
+  box-shadow: 0 0 30px rgba(255,180,100,0.3), 0 0 60px rgba(255,140,80,0.15);
+  animation: playGlowPulse 2s ease-in-out infinite;
+}
+
+@keyframes playGlowPulse {
+  0%, 100% { transform: translate(-50%,-50%) scale(1);   box-shadow: 0 0 30px rgba(255,180,100,0.3), 0 0 60px rgba(255,140,80,0.15); }
+  50%      { transform: translate(-50%,-50%) scale(1.15); box-shadow: 0 0 45px rgba(255,180,100,0.45), 0 0 80px rgba(255,140,80,0.25); }
+}
+
+/* 播放键三角图标 */
+.play-btn-icon {
+  position: absolute;
+  top: 50%; left: 55%;
+  transform: translate(-50%, -50%);
+  width: 0; height: 0;
+  border-top: 18px solid transparent;
+  border-bottom: 18px solid transparent;
+  border-left: 32px solid rgba(255,220,170,0.9);
+  filter: drop-shadow(0 0 8px rgba(255,200,120,0.6));
+}
+
+/* 播放键文字 */
+.play-btn-label {
+  position: absolute;
+  top: 105%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'ZCOOL KuaiLe', 'PingFang SC', cursive;
+  font-size: 13px;
+  color: #ffd7a0;
+  text-shadow: 0 0 8px rgba(255,200,100,0.5);
+  white-space: nowrap;
+}
+
+/* ---- 兜底播放按钮（摄像头失败时显示） ---- */
+#fallback-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  display: none;                          /* 默认隐藏 */
+}
+
+#fallback-play-btn.visible {
+  display: inline-block;
+}
+
+/* ============================================
+   场景3 背景（与场景1一致的粉嫩波点风）
+   ============================================ */
+
+#scene3 {
+  background:
+    radial-gradient(circle, rgba(255,255,255,0.45) 4px, transparent 4px),
+    linear-gradient(160deg, #fff0f3 0%, #ffe4ec 40%, #ffd6e0 100%);
+  background-size: 50px 50px, 100% 100%;
+}
+
+/* ---- 飘落花瓣（CSS 动画） ---- */
+.petal {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  font-size: 20px;
+  opacity: 0.7;
+  animation: petalFall linear infinite;
+}
+
+.petal-1  { left: 5%;  animation-duration: 8s;  animation-delay: 0s;   font-size: 22px; }
+.petal-2  { left: 12%; animation-duration: 10s; animation-delay: 1s;   font-size: 18px; }
+.petal-3  { left: 20%; animation-duration: 9s;  animation-delay: 3s;   font-size: 24px; }
+.petal-4  { left: 28%; animation-duration: 11s; animation-delay: 0.5s; font-size: 16px; }
+.petal-5  { left: 35%; animation-duration: 8.5s;animation-delay: 2s;   font-size: 20px; }
+.petal-6  { left: 42%; animation-duration: 10.5s;animation-delay: 4s;  font-size: 22px; }
+.petal-7  { left: 50%; animation-duration: 9.5s; animation-delay: 1.5s;font-size: 18px; }
+.petal-8  { left: 58%; animation-duration: 8s;   animation-delay: 3.5s; font-size: 24px; }
+.petal-9  { left: 65%; animation-duration: 11.5s;animation-delay: 0.8s; font-size: 16px; }
+.petal-10 { left: 72%; animation-duration: 9s;   animation-delay: 2.5s; font-size: 20px; }
+.petal-11 { left: 78%; animation-duration: 10s;  animation-delay: 5s;   font-size: 22px; }
+.petal-12 { left: 84%; animation-duration: 8.8s; animation-delay: 1.2s; font-size: 18px; }
+.petal-13 { left: 90%; animation-duration: 9.2s; animation-delay: 4.5s; font-size: 20px; }
+.petal-14 { left: 15%; animation-duration: 10.8s;animation-delay: 6s;   font-size: 24px; }
+.petal-15 { left: 70%; animation-duration: 8.2s; animation-delay: 2.8s; font-size: 16px; }
+
+@keyframes petalFall {
+  0%   { top: -5%;  transform: translateX(0)    rotate(0deg);   opacity: 0.8; }
+  25%  {            transform: translateX(15px)  rotate(90deg);  opacity: 0.6; }
+  50%  {            transform: translateX(-10px) rotate(180deg); opacity: 0.7; }
+  75%  {            transform: translateX(20px)  rotate(270deg); opacity: 0.5; }
+  100% { top: 105%; transform: translateX(-5px)  rotate(360deg); opacity: 0.3; }
+}
+
+/* ============================================
+   场景3 感谢信卡片
+   ============================================ */
+
+.thankyou-card {
+  background: rgba(255,252,250,0.92);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  padding: 40px 44px;
+  text-align: center;
+  box-shadow:
+    0 8px 40px rgba(255, 130, 150, 0.2),
+    0 2px 8px rgba(255, 150, 170, 0.12),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+  border: 2px dashed rgba(255, 180, 200, 0.5);
+  z-index: 1;
+  max-width: 500px;
+  width: 82%;
+  margin: 0 auto;
+  /* 入场动画：从下方淡入上浮 */
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 场景激活后卡片入场 */
+#scene3.active .thankyou-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 卡片顶部小狗 */
+.card-top-dog {
+  margin-bottom: 8px;
+}
+.card-top-dog img {
+  width: 80px;
+  height: auto;
+  animation: gentleFloat 2.8s ease-in-out infinite;
+}
+
+/* 标题 */
+.card-title {
+  font-family: 'ZCOOL KuaiLe', 'PingFang SC', 'Microsoft YaHei', cursive;
+  font-size: 28px;
+  color: #ff6290;
+  margin: 0 0 12px 0;
+  text-shadow: 0 0 12px rgba(255,150,180,0.4);
+}
+
+/* 装饰分割线 */
+.card-divider {
+  margin: 0 0 20px 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+/* 正文 */
+.card-body {
+  text-align: left;
+  margin-bottom: 18px;
+}
+.card-body p {
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+  font-size: 16px;
+  color: #7a5560;
+  line-height: 2;
+  margin: 0 0 10px 0;
+  text-indent: 2em;
+}
+.card-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* 签名 */
+.card-signature {
+  font-family: 'ZCOOL KuaiLe', 'PingFang SC', cursive;
+  font-size: 16px;
+  color: #c97a8a;
+  text-align: right;
+  margin: 0 0 24px 0;
+  font-style: italic;
+}
+
+/* 卡片底部小狗 */
+.card-bottom-dogs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px dotted rgba(255,180,200,0.4);
+}
+.card-bottom-dogs img {
+  width: 65px;
+  height: auto;
+}
+.card-bottom-dogs img:first-child {
+  animation: gentleFloat 3s ease-in-out infinite;
+}
+.card-bottom-dogs img:last-child {
+  animation: gentleSwing 3s ease-in-out infinite;
+}
+
+/* ============================================
+   自定义动画关键帧
+   ============================================ */
+
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+@keyframes gentleSwing {
+  0%, 100% { transform: rotate(-4deg); }
+  50%      { transform: rotate(4deg); }
+}
+
+/* ============================================
+   装饰元素：CSS 绘制的爪印爱心
+   ============================================ */
+
+.deco {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+/* 爪印 1 - 左上角 */
+.deco-paw-1 {
+  top: 8%;
+  left: 6%;
+  width: 50px;
+  height: 50px;
+}
+.deco-paw-1::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 8px;
+  width: 26px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+}
+.deco-paw-1::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 16px;
+  width: 9px;
+  height: 11px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow:
+    -11px -2px 0 0 #fff,
+    11px -2px 0 0 #fff,
+    -19px 7px 0 0 #fff,
+    19px 7px 0 0 #fff;
+}
+
+/* 爪印 2 - 右上角（稍小，旋转） */
+.deco-paw-2 {
+  top: 12%;
+  right: 8%;
+  width: 40px;
+  height: 40px;
+  transform: rotate(25deg);
+  opacity: 0.3;
+}
+.deco-paw-2::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 6px;
+  width: 21px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+}
+.deco-paw-2::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 13px;
+  width: 7px;
+  height: 9px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow:
+    -9px -1px 0 0 #fff,
+    9px -1px 0 0 #fff,
+    -15px 6px 0 0 #fff,
+    15px 6px 0 0 #fff;
+}
+
+/* 爪子 3 - 左下角 */
+.deco-paw-3 {
+  bottom: 15%;
+  left: 10%;
+  width: 38px;
+  height: 38px;
+  transform: rotate(-15deg);
+  opacity: 0.28;
+}
+.deco-paw-3::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 5px;
+  width: 20px;
+  height: 15px;
+  background: #fff;
+  border-radius: 50%;
+}
+.deco-paw-3::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 12px;
+  width: 7px;
+  height: 9px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow:
+    -9px -1px 0 0 #fff,
+    9px -1px 0 0 #fff,
+    -15px 5px 0 0 #fff,
+    15px 5px 0 0 #fff;
+}
+
+/* ============================================
+   信封容器 & 浮动动画
+   ============================================ */
+
+.envelope-container {
+  position: relative;
+  margin-bottom: 45px;
+  z-index: 5;
+  animation: float 3.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+
+/* ============================================
+   信封主体 (CSS 绘制)
+   ============================================ */
+
+.envelope {
+  position: relative;
+  width: 260px;
+  height: 180px;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 信封矩形身体 — 纯定位包装层，三角形 + 矩形的共享参考父容器 */
+.envelope-body {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 260px;
+  /* 高度由子元素撑开，不设 height */
+}
+
+/* 信封矩形主体（原 .envelope-body 视觉样式迁移至此） */
+.envelope-rect {
+  width: 260px;
+  height: 145px;
+  background: linear-gradient(160deg, #ffb3c6 0%, #ff8fa3 60%, #f47289 100%);
+  border-radius: 14px;
+  box-shadow:
+    0 8px 30px rgba(255, 105, 135, 0.35),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+  position: relative;                   /* 为折痕伪元素提供定位参考 */
+}
+
+/* 信封身体上的折痕装饰线 */
+.envelope-rect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20px;
+  right: 20px;
+  height: 0;
+  border-top: 1.5px dashed rgba(255,255,255,0.4);
+}
+
+/* 信封盖（三角形封口）— border-bottom 法：底边=260px 与矩形严格等宽 */
+/*
+  居中逻辑（margin:auto 法）：
+  - left:0; right:0; width:0 → 元素水平方向被拉伸到容器全宽
+  - margin-left:auto; margin-right:auto → auto 均分剩余空间 → 精确居中
+  - 比 left:50% 更可靠，不受子像素舍入影响
+  - border-left/right 各 130px → 三角形底边总宽 260px
+  - border-bottom: 80px → 三角形高度，尖角朝上，底边平直在下
+  - top: -81px（= -高度-1px）→ 底边伸入矩形 1px，消除亚像素缝
+  - 初始 rotateX(-180deg) → 三角形绕底边翻转，尖角朝下覆盖正面 = 闭合态
+*/
+.envelope-flap {
+  position: absolute;
+  top: -81px;                           /* = -(80+1)，让底边微伸入矩形顶边 1px */
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 0;
+  height: 0;
+  /* 左右透明 border 各 130px → 底边 260px，与矩形等宽 */
+  border-left: 130px solid transparent;
+  border-right: 130px solid transparent;
+  /* border-bottom 实色 → 三角形尖角朝上，底边平直朝下 */
+  border-bottom: 80px solid #d4627a;
+  border-top: 0;
+  z-index: 2;
+  /* 铰链 = 底边中点（border-bottom 底端 = 元素 top + 80px） */
+  transform-origin: 50% 80px;
+  /* 初始闭合态：绕底边翻转 -180°，尖角朝下覆盖矩形正面 */
+  transform: rotateX(-180deg);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  /* drop-shadow 跟随三角形实际形状 */
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.12));
+}
+/* 封盖顶部渐变光泽：叠加更亮的一层 */
+.envelope-flap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -130px;
+  width: 0;
+  height: 0;
+  border-left: 130px solid transparent;
+  border-right: 130px solid transparent;
+  border-bottom: 80px solid rgba(255,255,255,0.12);
+  border-top: 0;
+  pointer-events: none;
+}
+
+/* ============================================
+   爱心封蜡 (CSS 绘制 + 光泽)
+   ============================================ */
+
+.envelope-heart {
+  position: absolute;
+  top: 102px;                           /* 三角形翻转后尖端 y=114px，爱心 24px → 中心对齐 */
+  left: 50%;
+  z-index: 3;
+  width: 24px;
+  height: 24px;
+  background: radial-gradient(circle at 30% 30%, #ff6b7a, #e63946 70%);
+  transform: translate(-50%, 0) rotate(-45deg);
+  border-radius: 2px;
+  box-shadow: 0 2px 6px rgba(230, 57, 70, 0.4);
+}
+
+.envelope-heart::before,
+.envelope-heart::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background: #e63946;
+  border-radius: 50%;
+}
+
+.envelope-heart::before {
+  top: -12px;
+  left: 0;
+  background: radial-gradient(circle at 40% 30%, #ff6b7a, #e63946 70%);
+}
+
+.envelope-heart::after {
+  top: 0;
+  left: 12px;
+  box-shadow: inset -3px -3px 6px rgba(0,0,0,0.15);
+}
+
+/* ============================================
+   信封打开动画 (配合 JS 添加 .opening 类)
+   ============================================ */
+
+.envelope.opening {
+  animation: envelopeFadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.envelope.opening .envelope-flap {
+  transform: rotateX(0deg);             /* 翻起打开：从 -180deg → 0deg */
+}
+
+@keyframes envelopeFadeOut {
+  0%   { transform: scale(1);   opacity: 1; }
+  100% { transform: scale(1.2); opacity: 0; }
+}
+
+/* ============================================
+   按钮样式
+   ============================================ */
+
+.buttons {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.cute-btn {
+  position: relative;
+  z-index: 10;                           /* 确保按钮在所有装饰图片之上 */
+  padding: 14px 38px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #ff85a2 0%, #ff4d6d 100%);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow:
+    0 6px 20px rgba(255, 77, 109, 0.35),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  letter-spacing: 1px;
+}
+
+.cute-btn:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+  box-shadow:
+    0 8px 28px rgba(255, 77, 109, 0.45),
+    inset 0 1px 0 rgba(255,255,255,0.35);
+}
+
+.cute-btn:active {
+  transform: scale(0.97);
+  filter: brightness(0.95);
+}
+
+.btn-run {
+  /* 初始外观与 .cute-btn 完全相同，额外行为由 JS 实现 */
+}
+
+/* ============================================
+   提示气泡
+   ============================================ */
+
+.tooltip-bubble {
+  position: fixed;
+  background: #fff;
+  color: #ff4d6d;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  z-index: 9999;
+  pointer-events: none;
+  box-shadow: 0 6px 24px rgba(255, 77, 109, 0.2);
+  animation: tooltipFade 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.tooltip-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 7px solid #fff;
+}
+
+@keyframes tooltipFade {
+  0%   { opacity: 0; transform: translateY(5px); }
+  15%  { opacity: 1; transform: translateY(0); }
+  75%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-8px); }
+}
+
+/* ============================================
+   响应式微调
+   ============================================ */
+
+@media (max-width: 480px) {
+  /* 信封缩小 */
+  .envelope {
+    width: 220px;
+    height: 155px;
+  }
+  .envelope-body {
+    width: 220px;
+    /* height 由子元素撑开，不设固定值 */
+  }
+  .envelope-rect {
+    width: 220px;
+    height: 125px;
+  }
+  .envelope-flap {
+    top: -69px;                         /* -(68 + 1) */
+    border-left-width: 110px;
+    border-right-width: 110px;
+    border-bottom-width: 68px;
+    transform-origin: 50% 68px;         /* 铰链 = flap 底边 */
+  }
+  .envelope-flap::after {
+    border-left-width: 110px;
+    border-right-width: 110px;
+    border-bottom-width: 68px;
+  }
+  .envelope-heart {
+    top: 87px;
+    width: 20px;
+    height: 20px;
+  }
+  .envelope-heart::before,
+  .envelope-heart::after {
+    width: 20px;
+    height: 20px;
+  }
+  .envelope-heart::before { top: -10px; }
+  .envelope-heart::after  { left: 10px; }
+
+  /* 文案缩小 */
+  .envelope-question {
+    font-size: 22px;
+    margin-bottom: 30px;
+  }
+
+  /* 按钮缩小 */
+  .cute-btn {
+    padding: 12px 28px;
+    font-size: 16px;
+  }
+  .buttons {
+    gap: 20px;
+  }
+
+  /* 小狗缩小 */
+  .scene-dog {
+    max-width: 75px;
+  }
+  .dog-near-yes {
+    max-width: 65px;
+    left: calc(50% - 105px);
+  }
+  .dog-near-no {
+    max-width: 65px;
+    right: calc(50% - 105px);
+  }
+  .dog-corner {
+    max-width: 60px;
+  }
+  .dog-top-left,
+  .dog-bottom-left,
+  .dog-mid-right,
+  .dog-scene2-tl,
+  .dog-scene2-bl {
+    max-width: 55px;
+  }
+  .dog-scene2 {
+    max-width: 70px;
+  }
+  .card-top-dog img {
+    width: 60px;
+  }
+  .card-bottom-dogs img {
+    width: 50px;
+  }
+  .dog-card-left,
+  .dog-card-right {
+    max-width: 45px;
+    top: 50%;
+  }
+  .dog-card-left  { left: 1%; }
+  .dog-card-right { right: 1%; }
+
+  /* 气泡缩小 */
+  .speech-bubble {
+    font-size: 13px;
+    padding: 8px 14px;
+    bottom: calc(14% + 60px);
+    right: calc(6% + 35px);
+  }
+
+  /* 光晕手机端减淡 */
+  .tree-glow {
+    background: radial-gradient(
+      ellipse 55% 45% at 50% 42%,
+      rgba(255,200,120,0.12) 0%,
+      rgba(255,180,100,0.05) 35%,
+      transparent 70%
+    );
+  }
+
+  /* 情话文字缩小 */
+  .love-text {
+    font-size: 24px;
+  }
+  .love-sub {
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  #audio-controls {
+    bottom: 10%;
+    gap: 8px;
+    padding: 8px 14px;
+  }
+  .progress-wrap {
+    width: 110px;
+  }
+  .audio-ctrl-btn {
+    width: 28px; height: 28px;
+    font-size: 12px;
+  }
+  #time-display { font-size: 10px; }
+
+  #play-btn {
+    width: 70px; height: 70px;
+  }
+  .play-btn-glow {
+    width: 70px; height: 70px;
+  }
+  .play-btn-icon {
+    border-top-width: 14px;
+    border-bottom-width: 14px;
+    border-left-width: 24px;
+  }
+  .play-btn-label {
+    font-size: 11px;
+  }
+
+  #fallback-play-btn {
+    font-size: 16px;
+    padding: 12px 28px;
+  }
+
+  /* 感谢信卡片缩小 */
+  .thankyou-card {
+    padding: 28px 24px;
+    width: 90%;
+    border-radius: 20px;
+  }
+  .card-title {
+    font-size: 22px;
+  }
+  .card-body p {
+    font-size: 14px;
+    line-height: 1.8;
+    text-indent: 1.5em;
+  }
+  .card-signature {
+    font-size: 14px;
+  }
+  .petal { font-size: 14px; }
+  .petal-1,.petal-3,.petal-5,.petal-7,.petal-9,.petal-11,.petal-13 { font-size: 16px; }
+}

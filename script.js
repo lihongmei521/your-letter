@@ -427,6 +427,7 @@ function onHandResults(results) {
   // 只要五指张开就立即触发（带冷却防止重复）
   if (allFar && gestureState === 'IDLE') {
     gestureState = 'DONE';
+    if (scene2Data._autoTimer) { clearTimeout(scene2Data._autoTimer); scene2Data._autoTimer = null; }
     triggerParticleExplode();
   }
 
@@ -486,6 +487,7 @@ function initHands() {
 // ---- 兜底模式 ----
 function enableFallback() {
   scene2Fallback = true;
+  if (scene2Data && scene2Data._autoTimer) { clearTimeout(scene2Data._autoTimer); scene2Data._autoTimer = null; }
   updateGestureHint('');
   document.getElementById('fallback-play-btn').classList.add('visible');
 
@@ -737,6 +739,12 @@ function initScene2() {
       if (!camOk) { enableFallback(); return; }
       const handsOk = initHands();
       if (!handsOk) enableFallback();
+      // 6 秒挥手超时 → 自动进入下一阶段
+      scene2Data._autoTimer = setTimeout(() => {
+        if (scene2Phase === 'tree' && gestureState === 'IDLE') {
+          triggerParticleExplode();
+        }
+      }, 6000);
     }).catch(() => enableFallback());
   }
 
@@ -783,6 +791,7 @@ function destroyScene2() {
   document.getElementById('play-btn').classList.remove('visible');
   document.getElementById('audio-controls').classList.remove('visible');
   document.getElementById('fallback-play-btn').classList.remove('visible');
+  if (scene2Data._autoTimer) { clearTimeout(scene2Data._autoTimer); scene2Data._autoTimer = null; }
   if (currentAudio) { currentAudio.pause(); currentAudio = null; }
   if (progressUpdater) { clearInterval(progressUpdater); progressUpdater = null; }
   const lm = document.querySelector('.love-message');

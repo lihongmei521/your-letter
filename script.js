@@ -324,19 +324,31 @@ let driftStartTime = 0;
 let currentAudio   = null;
 let progressUpdater = null;
 
+// 预加载音频（场景2初始化时调用）
+function preloadAudio() {
+  const audio = new Audio('assets/audio/uqd1u-p3pzg.mp3');
+  audio.preload = 'auto';
+  audio.load();
+  currentAudio = audio;
+}
+
 function playScene2Audio() {
   if (audioPlaying) return;
+  if (!currentAudio) { preloadAudio(); }
   audioPlaying = true;
   scene2Phase = 'playing';
 
-  const audio = new Audio('assets/audio/uqd1u-p3pzg.mp3');
-  currentAudio = audio;
-  audio.play().catch(e => console.warn('Audio play failed:', e));
-
-  // 显示控制栏
-  document.getElementById('audio-controls').classList.add('visible');
-  document.getElementById('pause-btn').textContent = '⏸';
-  updateTimeDisplay(audio);
+  const audio = currentAudio;
+  // 等音频就绪再播放，超时 5s 自动跳过
+  const doPlay = () => {
+    audio.play().catch(() => {
+      setTimeout(() => { if (scene2Phase === 'playing') { scene2Phase = 'drifting'; driftStartTime = performance.now(); } }, 3000);
+    });
+  };
+  if (audio.readyState >= 2) { doPlay(); }
+  else { audio.addEventListener('canplay', doPlay, { once: true });
+    setTimeout(() => { if (!audioPlaying || audio.paused) { audio.removeEventListener('canplay', doPlay); doPlay(); } }, 5000);
+  }
 
   // 进度条更新
   progressUpdater = setInterval(() => {
@@ -711,7 +723,10 @@ function initScene2() {
   }
   requestAnimationFrame(animate);
 
-  /* ======== 10. 播放键点击（HTML 元素） ======== */
+  /* ======== 10. 预加载音频 ======== */
+  preloadAudio();
+
+  /* ======== 11. 播放键点击（HTML 元素） ======== */
   document.getElementById('play-btn').addEventListener('click', () => {
     if (scene2Phase !== 'orbiting') return;
     document.getElementById('play-btn').classList.remove('visible');

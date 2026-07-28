@@ -1,2 +1,7 @@
 # 依赖
 node_modules/
+
+# Claude Code
+.claude/
+.agents/
+skills-lock.json

@@ -439,7 +439,7 @@ function onHandResults(results) {
   // 只要五指张开就立即触发（带冷却防止重复）
   if (allFar && gestureState === 'IDLE') {
     gestureState = 'DONE';
-    if (scene2Data._autoTimer) { clearTimeout(scene2Data._autoTimer); scene2Data._autoTimer = null; }
+    if (scene2Data._autoTimer) { clearInterval(scene2Data._autoTimer); scene2Data._autoTimer = null; }
     triggerParticleExplode();
   }
 
@@ -499,7 +499,7 @@ function initHands() {
 // ---- 兜底模式 ----
 function enableFallback() {
   scene2Fallback = true;
-  if (scene2Data && scene2Data._autoTimer) { clearTimeout(scene2Data._autoTimer); scene2Data._autoTimer = null; }
+  if (scene2Data && scene2Data._autoTimer) { clearInterval(scene2Data._autoTimer); scene2Data._autoTimer = null; }
   updateGestureHint('');
   document.getElementById('fallback-play-btn').classList.add('visible');
 
@@ -723,10 +723,20 @@ function initScene2() {
   }
   requestAnimationFrame(animate);
 
-  /* ======== 10. 8秒无挥手自动推进（独立于摄像头） ======== */
-  scene2Data._autoTimer = setTimeout(() => {
-    if (scene2Phase === 'tree') { triggerParticleExplode(); }
-  }, 8000);
+  /* ======== 10. 8秒倒计时自动推进（不依赖摄像头） ======== */
+  let countdown = 8;
+  scene2Data._autoTimer = setInterval(() => {
+    countdown--;
+    if (countdown > 0) {
+      updateGestureHint('👋 挥手或等 ' + countdown + ' 秒自动进入');
+    } else {
+      clearInterval(scene2Data._autoTimer);
+      scene2Data._autoTimer = null;
+      if (scene2Phase === 'tree') {
+        try { triggerParticleExplode(); } catch(e) { enableFallback(); }
+      }
+    }
+  }, 1000);
 
   /* ======== 11. 预加载音频 ======== */
   preloadAudio();
@@ -805,7 +815,7 @@ function destroyScene2() {
   document.getElementById('play-btn').classList.remove('visible');
   document.getElementById('audio-controls').classList.remove('visible');
   document.getElementById('fallback-play-btn').classList.remove('visible');
-  if (scene2Data._autoTimer) { clearTimeout(scene2Data._autoTimer); scene2Data._autoTimer = null; }
+  if (scene2Data._autoTimer) { clearInterval(scene2Data._autoTimer); scene2Data._autoTimer = null; }
   if (currentAudio) { currentAudio.pause(); currentAudio = null; }
   if (progressUpdater) { clearInterval(progressUpdater); progressUpdater = null; }
   const lm = document.querySelector('.love-message');

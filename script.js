@@ -1,4 +1,10 @@
 /* ============================================
+   工具函数：检测 reduced-motion 偏好
+   ============================================ */
+
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ============================================
    场景切换函数
    ============================================ */
 
@@ -122,12 +128,15 @@ function showTooltip(x, y) {
     if (envelope.classList.contains('opening')) return;
     envelope.classList.add('opening');
 
+    const delay = prefersReducedMotion ? 100 : 600;
     setTimeout(() => {
       switchScene('scene2');
       const scene2 = document.getElementById('scene2');
-      if (scene2) scene2.classList.add('animate__animated', 'animate__fadeIn');
+      if (scene2 && !prefersReducedMotion) {
+        scene2.classList.add('animate__animated', 'animate__fadeIn');
+      }
       envelope.classList.remove('opening');
-    }, 600);
+    }, delay);
   });
 })();
 
@@ -387,9 +396,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentAudio.paused) {
       currentAudio.play();
       btn.textContent = '⏸';
+      btn.setAttribute('aria-label', '暂停');
     } else {
       currentAudio.pause();
       btn.textContent = '▶';
+      btn.setAttribute('aria-label', '播放');
     }
   });
 });
@@ -680,7 +691,9 @@ function initScene2() {
       if (scene2Phase === 'drifting' && driftT >= 1) {
         switchScene('scene3');
         const scene3 = document.getElementById('scene3');
-        if (scene3) scene3.classList.add('animate__animated', 'animate__fadeIn');
+        if (scene3 && !prefersReducedMotion) {
+          scene3.classList.add('animate__animated', 'animate__fadeIn');
+        }
       }
     }
 
@@ -728,7 +741,7 @@ function initScene2() {
   scene2Data._autoTimer = setInterval(() => {
     countdown--;
     if (countdown > 0) {
-      updateGestureHint('👋 挥手或等 ' + countdown + ' 秒自动进入');
+      updateGestureHint('挥手或等 ' + countdown + ' 秒自动进入');
     } else {
       clearInterval(scene2Data._autoTimer);
       scene2Data._autoTimer = null;
@@ -822,6 +835,6 @@ function destroyScene2() {
   if (lm) lm.style.opacity = '1';
   const bubble = document.querySelector('.speech-bubble');
   if (bubble) bubble.classList.remove('gone');
-  updateGestureHint('👋 对着摄像头挥挥手吧～');
+  updateGestureHint('对着摄像头挥挥手吧～');
   scene2Data = null;
 }

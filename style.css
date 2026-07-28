@@ -1,4 +1,34 @@
 /* ============================================
+   Design System — CSS Custom Properties
+   ============================================ */
+:root {
+  --pink-100: #fff0f3;
+  --pink-200: #ffe4ec;
+  --pink-300: #ffb6c1;
+  --pink-400: #ff8fa3;
+  --pink-500: #ff6290;
+  --pink-600: #ff4d6d;
+  --pink-700: #e63946;
+  --gold-100: #fff8e8;
+  --gold-200: #ffd7a0;
+  --gold-300: #ffc878;
+  --gold-400: #ffb844;
+  --rose-100: #fff5f5;
+  --rose-200: #fce4ec;
+  --rose-300: #f8bbd0;
+  --text-dark: #5a3e4a;
+  --text-body: #7a5560;
+  --text-light: #c97a8a;
+  --shadow-soft: 0 8px 32px rgba(255,130,150,0.18);
+  --shadow-card: 0 8px 40px rgba(255,105,135,0.2), 0 2px 8px rgba(255,150,170,0.1);
+  --radius-sm: 14px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-xl: 50px;
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
    全局重置 & 粉嫩可爱风背景
    ============================================ */
 
@@ -7,16 +37,18 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;                    /* 禁止页面滚动 */
+  overflow: hidden;
   font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 }
 
 body {
   background:
-    radial-gradient(circle, rgba(255,255,255,0.5) 5px, transparent 5px),
-    linear-gradient(135deg, #ffe4ec 0%, #ffb6c1 40%, #ffc0cb 70%, #ffb3c6 100%);
-  background-size: 60px 60px, 100% 100%;
-  background-position: 0 0, 0 0;
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.35) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(255,200,180,0.25) 0%, transparent 50%),
+    radial-gradient(circle, rgba(255,255,255,0.45) 5px, transparent 5px),
+    linear-gradient(160deg, #fff0f3 0%, #ffe4ec 35%, #ffd6e0 65%, #ffc8d6 100%);
+  background-size: 100% 100%, 100% 100%, 55px 55px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 0 0;
 }
 
 /* ============================================
@@ -30,7 +62,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  overflow: hidden;                    /* 防止绝对定位元素溢出 */
+  overflow: hidden;
 }
 .scene.active {
   display: flex;
@@ -39,30 +71,58 @@ body {
   justify-content: center;
 }
 
+/* 场景1 顶部闪烁星星 */
+#scene1::before {
+  content: '✨';
+  position: absolute;
+  top: 6%; left: 15%;
+  font-size: 22px;
+  z-index: 0;
+  pointer-events: none;
+  animation: sparkle 2.5s ease-in-out infinite;
+  opacity: 0.7;
+}
+#scene1::after {
+  content: '✨';
+  position: absolute;
+  top: 12%; right: 12%;
+  font-size: 18px;
+  z-index: 0;
+  pointer-events: none;
+  animation: sparkle 3.2s ease-in-out 1s infinite;
+  opacity: 0.5;
+}
+@keyframes sparkle {
+  0%, 100% { transform: scale(0.6); opacity: 0.3; }
+  50%      { transform: scale(1.2); opacity: 0.9; }
+}
+
 /* ============================================
    信封上方文案
    ============================================ */
 
 .envelope-question {
   font-family: 'ZCOOL KuaiLe', 'PingFang SC', 'Microsoft YaHei', cursive;
-  font-size: 28px;
-  color: #ff6290;
+  font-size: 30px;
+  color: var(--pink-500);
   text-shadow:
-    0 0 10px rgba(255,255,255,0.9),
-    0 0 25px rgba(255,255,255,0.6),
-    0 0 40px rgba(255,150,180,0.4);
-  margin: 0 0 38px 0;
+    0 0 12px rgba(255,255,255,0.95),
+    0 0 30px rgba(255,255,255,0.55),
+    0 0 50px rgba(255,150,180,0.45),
+    0 2px 4px rgba(180,60,80,0.1);
+  margin: 0 0 42px 0;
   z-index: 5;
   text-align: center;
-  padding: 0 16px;
-  animation: breathe 2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  padding: 0 20px;
+  animation: breathe 2.2s var(--ease-smooth) infinite;
   user-select: none;
   line-height: 1.4;
+  letter-spacing: 2px;
 }
 
 @keyframes breathe {
-  0%, 100% { transform: scale(1);     opacity: 1; }
-  50%      { transform: scale(1.06);  opacity: 0.85; }
+  0%, 100% { transform: scale(1); opacity: 1; filter: brightness(1); }
+  50%      { transform: scale(1.05); opacity: 0.88; filter: brightness(1.06); }
 }
 
 /* ============================================
@@ -549,14 +609,15 @@ body {
 }
 
 /* ============================================
-   场景3 背景（与场景1一致的粉嫩波点风）
+   场景3 背景（与场景1一致的粉嫩波点风 + 柔光）
    ============================================ */
 
 #scene3 {
   background:
+    radial-gradient(ellipse 40% 30% at 50% 25%, rgba(255,220,200,0.2) 0%, transparent 100%),
     radial-gradient(circle, rgba(255,255,255,0.45) 4px, transparent 4px),
-    linear-gradient(160deg, #fff0f3 0%, #ffe4ec 40%, #ffd6e0 100%);
-  background-size: 50px 50px, 100% 100%;
+    linear-gradient(170deg, #fff5f5 0%, #fff0f3 30%, #ffe4ec 55%, #ffd6e0 100%);
+  background-size: 100% 100%, 50px 50px, 100% 100%;
 }
 
 /* ---- 飘落花瓣（CSS 动画） ---- */
@@ -835,12 +896,30 @@ body {
   position: relative;
   margin-bottom: 45px;
   z-index: 5;
-  animation: float 3.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  animation: float 3.5s var(--ease-smooth) infinite;
+}
+
+/* 信封光晕 */
+.envelope-container::before {
+  content: '';
+  position: absolute;
+  top: 35%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px; height: 200px;
+  background: radial-gradient(ellipse, rgba(255,180,200,0.25) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+  animation: glowBreathe 3s var(--ease-smooth) infinite;
+}
+
+@keyframes glowBreathe {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+  50%      { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
 }
 
 @keyframes float {
   0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-7px); }
+  50%      { transform: translateY(-6px); }
 }
 
 /* ============================================
@@ -1005,37 +1084,57 @@ body {
 
 .cute-btn {
   position: relative;
-  z-index: 10;                           /* 确保按钮在所有装饰图片之上 */
-  padding: 14px 38px;
+  z-index: 10;
+  padding: 15px 42px;
   font-size: 18px;
   font-weight: 700;
+  font-family: 'ZCOOL KuaiLe', 'PingFang SC', cursive;
   color: #fff;
-  background: linear-gradient(135deg, #ff85a2 0%, #ff4d6d 100%);
+  background: linear-gradient(135deg, #ff9ab2 0%, #ff5c7a 50%, #ff3d60 100%);
   border: none;
-  border-radius: 50px;
+  border-radius: var(--radius-xl);
   cursor: pointer;
   box-shadow:
-    0 6px 20px rgba(255, 77, 109, 0.35),
-    inset 0 1px 0 rgba(255,255,255,0.3);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    0 6px 24px rgba(255, 70, 100, 0.35),
+    0 2px 6px rgba(255, 100, 130, 0.2),
+    inset 0 1px 0 rgba(255,255,255,0.35);
+  transition: transform 0.25s var(--ease-smooth),
+              box-shadow 0.25s var(--ease-smooth),
+              filter 0.25s var(--ease-smooth);
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
+  overflow: hidden;
+}
+
+/* 按钮光泽扫过效果 */
+.cute-btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
 }
 
 .cute-btn:hover {
-  transform: scale(1.05);
-  filter: brightness(1.1);
+  transform: translateY(-2px) scale(1.04);
+  filter: brightness(1.08);
   box-shadow:
-    0 8px 28px rgba(255, 77, 109, 0.45),
-    inset 0 1px 0 rgba(255,255,255,0.35);
+    0 10px 32px rgba(255, 70, 100, 0.5),
+    0 4px 10px rgba(255, 100, 130, 0.3),
+    inset 0 1px 0 rgba(255,255,255,0.4);
+}
+
+.cute-btn:hover::after {
+  left: 120%;
 }
 
 .cute-btn:active {
-  transform: scale(0.97);
-  filter: brightness(0.95);
+  transform: translateY(0) scale(0.96);
+  filter: brightness(0.93);
+  transition: transform 0.1s var(--ease-smooth);
 }
 
 .btn-run {

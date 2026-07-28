@@ -1,8 +1,175 @@
 /* ============================================
+   Canvas 星空背景生成器
+   ============================================ */
+
+function initStarfield() {
+  const canvas = document.getElementById('starfield-canvas');
+  if (!canvas) return;
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let W, H;
+
+  function resize() {
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width  = W * dpr;
+    canvas.height = H * dpr;
+    canvas.style.width  = W + 'px';
+    canvas.style.height = H + 'px';
+  }
+  resize();
+  window.addEventListener('resize', () => { resize(); generate(); });
+
+  const ctx = canvas.getContext('2d');
+  const stars = [];
+  const twinklers = [];
+
+  function generate() {
+    stars.length = 0;
+    twinklers.length = 0;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+
+    // --- Milky Way glow band (diagonal, soft) ---
+    const mwGrad = ctx.createRadialGradient(W * 0.45, H * 0.3, 0, W * 0.5, H * 0.4, Math.max(W, H) * 0.6);
+    mwGrad.addColorStop(0, 'rgba(120,140,200,0.04)');
+    mwGrad.addColorStop(0.3, 'rgba(100,120,180,0.02)');
+    mwGrad.addColorStop(0.7, 'rgba(80,60,120,0.008)');
+    mwGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = mwGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    // --- Star colors (temperature variation) ---
+    const colors = [
+      { c: '255,245,235', w: 35 }, // warm white
+      { c: '240,245,255', w: 30 }, // blue-white
+      { c: '255,250,240', w: 20 }, // cream
+      { c: '220,230,255', w: 10 }, // cool blue
+      { c: '255,240,200', w: 5 },  // warm gold
+    ];
+    const totalW = colors.reduce((s, o) => s + o.w, 0);
+
+    function randomColor() {
+      let r = Math.random() * totalW;
+      for (const o of colors) { r -= o.w; if (r <= 0) return o.c; }
+      return colors[0].c;
+    }
+
+    // --- Generate 500 stars ---
+    const starCount = 500;
+    for (let i = 0; i < starCount; i++) {
+      // Slight bias toward milky way band (diagonal from top-left to bottom-right)
+      let x, y;
+      if (Math.random() < 0.35) {
+        // Milky way band: cluster along a diagonal with noise
+        const t = Math.random();
+        const bandX = W * 0.1 + t * W * 0.8;
+        const bandY = H * 0.05 + t * H * 0.9;
+        x = bandX + (Math.random() - 0.5) * W * 0.35;
+        y = bandY + (Math.random() - 0.5) * H * 0.25;
+      } else {
+        x = Math.random() * W;
+        y = Math.random() * H;
+      }
+
+      // Power-law size distribution: most are tiny, few are larger
+      const sizeRnd = Math.random();
+      const size = sizeRnd < 0.7  ? 0.3 + Math.random() * 0.6   // 70%: 0.3-0.9px (field stars)
+                 : sizeRnd < 0.92 ? 0.8 + Math.random() * 1.0   // 22%: 0.8-1.8px (visible stars)
+                 :                  1.5 + Math.random() * 1.5;  // 8%:  1.5-3.0px (bright stars)
+
+      const opacity = 0.12 + Math.random() * 0.88;
+      const color = randomColor();
+      const twinkle = Math.random() < 0.18; // 18% twinkle
+      const twinkleSpeed = 0.5 + Math.random() * 2.0;
+      const twinklePhase = Math.random() * Math.PI * 2;
+      const twinkleAmp = 0.3 + Math.random() * 0.5;
+
+      const star = {
+        x, y, size, opacity, color,
+        twinkle, twinkleSpeed, twinklePhase, twinkleAmp,
+      };
+      stars.push(star);
+      if (twinkle) twinklers.push(star);
+
+      // Draw static star immediately
+      if (!twinkle) {
+        drawStar(star, star.opacity);
+      }
+    }
+  }
+
+  function drawStar(s, alpha) {
+    const a = Math.max(0, Math.min(1, alpha));
+    if (a < 0.02) return;
+
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${s.color},${a})`;
+
+    // Bright stars get a subtle glow
+    if (s.size > 1.5 && a > 0.6) {
+      ctx.shadowColor = `rgba(${s.color},${a * 0.4})`;
+      ctx.shadowBlur = s.size * 2.5;
+    } else {
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur = 0;
+    }
+
+    ctx.fill();
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+  }
+
+  // --- Twinkle animation loop ---
+  let lastTime = 0;
+  function animate(ts) {
+    const dt = Math.min((ts - lastTime) / 1000, 0.2);
+    lastTime = ts;
+
+    // Clear and redraw twinkling stars
+    for (const s of twinklers) {
+      // Clear previous: draw over with background
+      ctx.clearRect(s.x - s.size - 4, s.y - s.size - 4, s.size * 2 + 8, s.size * 2 + 8);
+
+      // Redraw nearby static stars that were cleared
+      for (const ns of stars) {
+        if (ns === s || ns.twinkle) continue;
+        const dx = ns.x - s.x, dy = ns.y - s.y;
+        if (Math.abs(dx) < ns.size + 5 && Math.abs(dy) < ns.size + 5) {
+          drawStar(ns, ns.opacity);
+        }
+      }
+
+      // Calculate new opacity
+      const phase = s.twinklePhase + ts * 0.001 * s.twinkleSpeed;
+      const alpha = s.opacity * (0.5 + s.twinkleAmp * (0.5 + 0.5 * Math.sin(phase)));
+      drawStar(s, alpha);
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  generate();
+  requestAnimationFrame(animate);
+}
+
+// Init starfield on load
+document.addEventListener('DOMContentLoaded', initStarfield);
+
+/* ============================================
    工具函数：检测 reduced-motion 偏好
    ============================================ */
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ============================================
+   resize 时重新生成星空
+   ============================================ */
+
+window.addEventListener('resize', () => {
+  // debounced regenerate handled inside initStarfield resize listener
+});
 
 /* ============================================
    场景切换函数
@@ -348,8 +515,9 @@ function playScene2Audio() {
   scene2Phase = 'playing';
 
   const audio = currentAudio;
-  // 等音频就绪再播放，超时 5s 自动跳过
   const doPlay = () => {
+    // 显示音频控制栏
+    document.getElementById('audio-controls').classList.add('visible');
     audio.play().catch(() => {
       setTimeout(() => { if (scene2Phase === 'playing') { scene2Phase = 'drifting'; driftStartTime = performance.now(); } }, 3000);
     });
@@ -378,7 +546,7 @@ function playScene2Audio() {
     }
   };
 
-  // 播放结束
+  // 播放结束 → 等3秒再进入场景3
   audio.addEventListener('ended', () => {
     clearInterval(progressUpdater);
     document.getElementById('audio-controls').classList.remove('visible');
@@ -507,17 +675,43 @@ function initHands() {
   }
 }
 
+// ---- 自动推进定时器（模块级，供 enableFallback + initScene2 共用） ----
+let autoTimer = null;
+
+function startAutoTimer(seconds, hintText, showCountdown) {
+  if (autoTimer) clearInterval(autoTimer);
+  let countdown = seconds;
+  updateGestureHint(showCountdown ? hintText + ' ' + countdown + ' 秒' : hintText);
+  autoTimer = setInterval(() => {
+    countdown--;
+    if (countdown > 0) {
+      if (showCountdown) updateGestureHint(hintText + ' ' + countdown + ' 秒');
+    } else {
+      clearInterval(autoTimer);
+      autoTimer = null;
+      // 兜底按钮消失
+      const fb = document.getElementById('fallback-play-btn');
+      if (fb) fb.classList.remove('visible');
+      if (scene2Phase === 'tree') {
+        try { triggerParticleExplode(); } catch(e) { /* already exploding */ }
+      }
+    }
+  }, 1000);
+  if (scene2Data) scene2Data._autoTimer = autoTimer;
+}
+
 // ---- 兜底模式 ----
 function enableFallback() {
   scene2Fallback = true;
-  if (scene2Data && scene2Data._autoTimer) { clearInterval(scene2Data._autoTimer); scene2Data._autoTimer = null; }
-  updateGestureHint('');
-  document.getElementById('fallback-play-btn').classList.add('visible');
+  if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+  if (scene2Data) scene2Data._autoTimer = null;
+  startAutoTimer(8, '摄像头未连接，', true);
 
+  document.getElementById('fallback-play-btn').classList.add('visible');
   document.getElementById('fallback-play-btn').addEventListener('click', function h(e) {
     this.classList.remove('visible');
     this.removeEventListener('click', h);
-    // 兜底按钮触发和挥手一样的粒子动画流程
+    if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
     triggerParticleExplode();
   });
 }
@@ -675,25 +869,51 @@ function initScene2() {
     // --- 环绕模式：粒子在环形轨道上持续旋转 ---
     if (scene2Phase === 'orbiting' || scene2Phase === 'playing' || scene2Phase === 'drifting') {
       const speedMul = (scene2Phase === 'playing') ? 2.5 : (scene2Phase === 'drifting' ? 0.3 : 1.0);
-      const driftT   = (scene2Phase === 'drifting') ? Math.min((ts - driftStartTime) / 2000, 1) : 0;
+      const driftT   = (scene2Phase === 'drifting') ? Math.min((ts - driftStartTime) / 3000, 1) : 0;
       const pos = new Float32Array(animTotal * 3);
       for (let i = 0; i < animTotal; i++) {
         ringAngles[i] += ringSpeeds[i] * dt * speedMul * (1 - driftT * 0.8);
         const a = ringAngles[i];
-        const r = ringRadii[i] * (1 + driftT * 4);       // 飘散时半径扩大
+        const r = ringRadii[i] * (1 + driftT * 4);
         const y = ringBaseY[i] + Math.sin(now * 1.5 + ringAngles[i]) * ringOscAmp[i];
         pos[i * 3]     = Math.cos(a) * r;
-        pos[i * 3 + 1] = y + driftT * 3;                 // 飘散时整体上浮
+        pos[i * 3 + 1] = y + driftT * 3;
         pos[i * 3 + 2] = Math.sin(a) * r;
       }
       writePositions(pos);
 
-      if (scene2Phase === 'drifting' && driftT >= 1) {
-        switchScene('scene3');
-        const scene3 = document.getElementById('scene3');
-        if (scene3 && !prefersReducedMotion) {
-          scene3.classList.add('animate__animated', 'animate__fadeIn');
-        }
+      // Drift glow: warm light rises from bottom as particles drift up
+      if (scene2Phase === 'drifting') {
+        const glow = document.querySelector('#scene2 .drift-glow');
+        if (glow) glow.style.opacity = driftT;
+      }
+
+      // Crossfade: scene2 fades out, scene3 fades in
+      if (scene2Phase === 'drifting' && driftT >= 1 && !scene2Data._crossfading) {
+        scene2Data._crossfading = true;
+        const sc2 = document.getElementById('scene2');
+        const sc3 = document.getElementById('scene3');
+
+        // Scene 3 pre-active (invisible, starts rendering)
+        sc3.classList.add('active');
+        sc3.style.opacity = '0';
+        sc3.style.transition = 'opacity 0.8s ease';
+
+        // Start crossfade
+        requestAnimationFrame(() => {
+          sc2.style.opacity = '0';
+          sc2.style.transition = 'opacity 0.8s ease';
+          sc3.style.opacity = '1';
+        });
+
+        // Clean up after transition
+        setTimeout(() => {
+          sc2.classList.remove('active');
+          sc2.style.opacity = '';
+          sc2.style.transition = '';
+          sc3.style.transition = '';
+          destroyScene2();
+        }, 900);
       }
     }
 
@@ -736,38 +956,27 @@ function initScene2() {
   }
   requestAnimationFrame(animate);
 
-  /* ======== 10. 8秒倒计时自动推进（不依赖摄像头） ======== */
-  let countdown = 8;
-  scene2Data._autoTimer = setInterval(() => {
-    countdown--;
-    if (countdown > 0) {
-      updateGestureHint('挥手或等 ' + countdown + ' 秒自动进入');
-    } else {
-      clearInterval(scene2Data._autoTimer);
-      scene2Data._autoTimer = null;
-      if (scene2Phase === 'tree') {
-        try { triggerParticleExplode(); } catch(e) { enableFallback(); }
-      }
-    }
-  }, 1000);
+  /* ======== 10. 智能倒计时：摄像头可用5秒(无倒计时) / 兜底8秒(显示倒计时) ======== */
+
+  // 先不启动任何定时器，等摄像头初始化结果
+  updateGestureHint('正在启动摄像头…');
 
   /* ======== 11. 预加载音频 ======== */
   preloadAudio();
 
-  /* ======== 11. 播放键点击（HTML 元素） ======== */
+  /* ======== 12. 播放键点击 ======== */
   document.getElementById('play-btn').addEventListener('click', () => {
     if (scene2Phase !== 'orbiting') return;
     document.getElementById('play-btn').classList.remove('visible');
     playScene2Audio();
   });
 
-  /* ======== 11. 摄像头 + MediaPipe（轮询等待 CDN 加载） ======== */
+  /* ======== 13. 摄像头 + MediaPipe ======== */
   let pollTries = 0;
-  const MAX_POLL = 60;  // 最多等 10 秒（每 200ms 查一次）
+  const MAX_POLL = 60;
 
   function tryStartCamera() {
     pollTries++;
-    // 等 CDN 脚本就绪
     if (typeof Hands === 'undefined' || typeof Camera === 'undefined') {
       if (pollTries < MAX_POLL) {
         setTimeout(tryStartCamera, 200);
@@ -777,15 +986,16 @@ function initScene2() {
       }
       return;
     }
-    // 脚本就绪，尝试摄像头
     initCamera().then(camOk => {
       if (!camOk) { enableFallback(); return; }
       const handsOk = initHands();
-      if (!handsOk) enableFallback();
+      if (!handsOk) { enableFallback(); return; }
+      // 摄像头就绪，启动5秒挥手等待（不显示倒计时）
+      startAutoTimer(5, '挥挥手吧～', false);
     }).catch(() => enableFallback());
   }
 
-  setTimeout(tryStartCamera, 500);  // 给 CDN 0.5s 缓冲
+  setTimeout(tryStartCamera, 500);
 
   /* ======== 12. Resize ======== */
   window.addEventListener('resize', onScene2Resize);
@@ -828,7 +1038,10 @@ function destroyScene2() {
   document.getElementById('play-btn').classList.remove('visible');
   document.getElementById('audio-controls').classList.remove('visible');
   document.getElementById('fallback-play-btn').classList.remove('visible');
+  const glow = document.querySelector('#scene2 .drift-glow');
+  if (glow) glow.style.opacity = '0';
   if (scene2Data._autoTimer) { clearInterval(scene2Data._autoTimer); scene2Data._autoTimer = null; }
+  if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
   if (currentAudio) { currentAudio.pause(); currentAudio = null; }
   if (progressUpdater) { clearInterval(progressUpdater); progressUpdater = null; }
   const lm = document.querySelector('.love-message');

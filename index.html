@@ -28,35 +28,29 @@
   <a href="#main-content" class="skip-link">跳到主要内容</a>
 
   <!-- ============================================ -->
-  <!-- 场景1：信封与按钮                                -->
+  <!-- 场景1：星空夜信                                  -->
   <!-- ============================================ -->
   <main id="main-content">
     <section id="scene1" class="scene active" aria-label="信封场景">
 
-      <!-- CSS 爪印装饰 -->
-      <div class="deco deco-paw-1" aria-hidden="true"></div>
-      <div class="deco deco-paw-2" aria-hidden="true"></div>
-      <div class="deco deco-paw-3" aria-hidden="true"></div>
+      <!-- Canvas 真实星空背景 -->
+      <canvas id="starfield-canvas" aria-hidden="true"></canvas>
 
-      <!-- CSS 星星装饰 -->
-      <div class="star-deco star-deco-1" aria-hidden="true"></div>
-      <div class="star-deco star-deco-2" aria-hidden="true"></div>
+      <!-- 前景萤火虫光点 -->
+      <div class="fireflies" aria-hidden="true">
+        <span class="firefly f1"></span><span class="firefly f2"></span><span class="firefly f3"></span>
+        <span class="firefly f4"></span><span class="firefly f5"></span><span class="firefly f6"></span>
+        <span class="firefly f7"></span><span class="firefly f8"></span>
+      </div>
 
-      <!-- 小狗装饰图片 -->
-      <img src="assets/images/dog01.png"  class="scene-dog dog-left-env" alt="" aria-hidden="true">
-      <img src="assets/images/dog02.png"  class="scene-dog dog-right-env" alt="" aria-hidden="true">
-      <img src="assets/images/dog09.png"  class="scene-dog dog-near-yes" alt="" aria-hidden="true">
-      <img src="assets/images/dog13.png"  class="scene-dog dog-near-no" alt="" aria-hidden="true">
-      <img src="assets/images/dog07.png"  class="scene-dog dog-corner" alt="" aria-hidden="true">
-      <img src="assets/images/dog10.png"  class="scene-dog dog-top-left" alt="" aria-hidden="true">
-      <img src="assets/images/dog03.png"  class="scene-dog dog-bottom-left" alt="" aria-hidden="true">
-      <img src="assets/images/dog11.png"  class="scene-dog dog-mid-right" alt="" aria-hidden="true">
-
-      <!-- 信封上方文案 -->
-      <p class="envelope-question">你愿意打开这封信吗？</p>
+      <!-- 信封上方文案 + 小狗 -->
+      <div class="question-row">
+        <p class="envelope-question">你愿意打开这封信吗？</p>
+        <img src="assets/images/dog09.png" class="dog-by-text" alt="" aria-hidden="true">
+      </div>
 
       <div class="envelope-container">
-        <div class="envelope" role="img" aria-label="一封粉色的信">
+        <div class="envelope" role="img" aria-label="一封白色的信">
           <div class="envelope-body">
             <div class="envelope-flap"></div>
             <div class="envelope-rect"></div>
@@ -66,23 +60,23 @@
       </div>
 
       <div class="buttons">
-        <button id="btn-yes" class="cute-btn">愿意</button>
-        <button id="btn-no" class="cute-btn btn-run">不愿意</button>
+        <button id="btn-yes" class="cute-btn btn-yes-glow">愿意</button>
+        <button id="btn-no" class="cute-btn btn-no-ghost">不愿意</button>
       </div>
     </section>
   </main>
 
   <!-- ============================================ -->
-  <!-- 场景2：摄像头 + 粒子圣诞树 + 手势                  -->
+  <!-- 场景2：星辰之树 + 手势 + 音乐                       -->
   <!-- ============================================ -->
   <section id="scene2" class="scene" aria-label="音乐场景">
-    <!-- 小狗装饰 -->
-    <img src="assets/images/dog15.png" class="scene-dog dog-scene2" alt="" aria-hidden="true">
-    <img src="assets/images/dog04.png" class="scene-dog dog-scene2-tl" alt="" aria-hidden="true">
-    <img src="assets/images/dog12.png" class="scene-dog dog-scene2-bl" alt="" aria-hidden="true">
-    <div class="speech-bubble">对着我挥挥手试试～</div>
 
-    <!-- 柔光光晕 -->
+    <!-- 萤火虫光点（延续场景1的视觉元素） -->
+    <div class="fireflies fireflies-s2" aria-hidden="true">
+      <span class="firefly f1"></span><span class="firefly f2"></span><span class="firefly f3"></span>
+      <span class="firefly f4"></span><span class="firefly f5"></span>
+    </div>
+
     <div class="tree-glow" aria-hidden="true"></div>
 
     <!-- 情话浮层 -->
@@ -114,49 +108,39 @@
       <video id="input-video" autoplay playsinline style="display:none;" aria-hidden="true"></video>
       <canvas id="particle-canvas" aria-hidden="true"></canvas>
     </div>
+    <div class="drift-glow" aria-hidden="true"></div>
     <div id="gesture-hint" aria-live="polite">对着摄像头挥挥手吧～</div>
   </section>
 
   <!-- ============================================ -->
-  <!-- 场景3：感谢信                                   -->
+  <!-- 场景3：黎明感谢信                                 -->
   <!-- ============================================ -->
   <section id="scene3" class="scene" aria-label="感谢信">
 
-    <!-- 飘落花瓣（CSS 绘制） -->
-    <div class="petal petal-1" aria-hidden="true"><span></span></div>
-    <div class="petal petal-2" aria-hidden="true"><span></span></div>
-    <div class="petal petal-3" aria-hidden="true"><span></span></div>
-    <div class="petal petal-4" aria-hidden="true"><span></span></div>
-    <div class="petal petal-5" aria-hidden="true"><span></span></div>
-    <div class="petal petal-6" aria-hidden="true"><span></span></div>
-    <div class="petal petal-7" aria-hidden="true"><span></span></div>
-    <div class="petal petal-8" aria-hidden="true"><span></span></div>
-    <div class="petal petal-9" aria-hidden="true"><span></span></div>
-    <div class="petal petal-10" aria-hidden="true"><span></span></div>
-    <div class="petal petal-11" aria-hidden="true"><span></span></div>
-    <div class="petal petal-12" aria-hidden="true"><span></span></div>
-    <div class="petal petal-13" aria-hidden="true"><span></span></div>
-    <div class="petal petal-14" aria-hidden="true"><span></span></div>
-    <div class="petal petal-15" aria-hidden="true"><span></span></div>
+    <!-- 晨曦光尘 -->
+    <div class="dust-layer" aria-hidden="true">
+      <span class="dust d1"></span><span class="dust d2"></span><span class="dust d3"></span>
+      <span class="dust d4"></span><span class="dust d5"></span><span class="dust d6"></span>
+      <span class="dust d7"></span><span class="dust d8"></span><span class="dust d9"></span>
+      <span class="dust d10"></span><span class="dust d11"></span><span class="dust d12"></span>
+    </div>
 
     <!-- 感谢信卡片 -->
     <article class="thankyou-card">
-      <!-- 卡片顶部小狗装饰 -->
-      <div class="card-top-dog">
-        <img src="assets/images/dog08.png" alt="小狗捧爱心">
+      <!-- 标题 + 小狗 -->
+      <div class="card-title-row">
+        <h2 class="card-title">谢谢你听完这段话</h2>
+        <img src="assets/images/dog09.png" class="dog-by-title" alt="" aria-hidden="true">
       </div>
 
-      <!-- 标题 -->
-      <h2 class="card-title">谢谢你听完这段话</h2>
-
-      <!-- 装饰分割线（CSS 爱心） -->
+      <!-- 装饰分割线 -->
       <div class="card-divider" aria-hidden="true">
         <span class="divider-heart"></span>
         <span class="divider-heart"></span>
         <span class="divider-heart"></span>
       </div>
 
-      <!-- 感谢信正文 -->
+      <!-- 正文 -->
       <div class="card-body">
         <p>嘿，当你看到这里的时候，我已经把藏在心里很久的话，借着这封信说出来了。</p>
         <p>遇见你之后，每一天都变得不一样了。你笑的时候，好像全世界的星星都亮了起来。你皱眉的时候，我也忍不住想帮你把所有烦恼都赶走。</p>
@@ -168,16 +152,12 @@
       <!-- 签名 -->
       <p class="card-signature">—— 那个偷偷喜欢你很久的人</p>
 
-      <!-- 卡片底部小狗 -->
+      <!-- 卡片底部两只小狗靠在一起 -->
       <div class="card-bottom-dogs">
         <img src="assets/images/dog14.png" alt="" aria-hidden="true">
         <img src="assets/images/dog16.png" alt="" aria-hidden="true">
       </div>
     </article>
-
-    <!-- 卡片外侧小狗 -->
-    <img src="assets/images/dog05.png" class="scene-dog dog-card-left" alt="" aria-hidden="true">
-    <img src="assets/images/dog06.png" class="scene-dog dog-card-right" alt="" aria-hidden="true">
   </section>
 
   <script src="script.js"></script>

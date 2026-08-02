@@ -19,7 +19,7 @@
   <!-- 4. MediaPipe Hands (手势识别) -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
-  <!-- 引入自己的样式和脚本 -->
+  <!-- 5. 引入自己的样式和脚本 -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -45,7 +45,7 @@
 
       <!-- 信封上方文案 + 小狗 -->
       <div class="question-row">
-        <p class="envelope-question">你愿意打开这封信吗？</p>
+        <p class="envelope-question">有一封信，想请你听听看</p>
         <img src="assets/images/dog09.png" class="dog-by-text" alt="" aria-hidden="true">
       </div>
 
@@ -60,16 +60,16 @@
       </div>
 
       <div class="buttons">
-        <button id="btn-yes" class="cute-btn btn-yes-glow">愿意</button>
-        <button id="btn-no" class="cute-btn btn-no-ghost">不愿意</button>
+        <button id="btn-yes" class="cute-btn btn-yes-glow">拆开它</button>
+        <button id="btn-no" class="cute-btn btn-no-ghost">不拆</button>
       </div>
     </section>
   </main>
 
   <!-- ============================================ -->
-  <!-- 场景2：星辰之树 + 手势 + 音乐                       -->
+  <!-- 场景2：星辰之树 + 手势 + 信的声音                        -->
   <!-- ============================================ -->
-  <section id="scene2" class="scene" aria-label="音乐场景">
+  <section id="scene2" class="scene" aria-label="听信场景">
 
     <!-- 萤火虫光点（延续场景1的视觉元素） -->
     <div class="fireflies fireflies-s2" aria-hidden="true">
@@ -113,9 +113,9 @@
   </section>
 
   <!-- ============================================ -->
-  <!-- 场景3：黎明感谢信                                 -->
+  <!-- 场景3：黎明 · 信的背面                              -->
   <!-- ============================================ -->
-  <section id="scene3" class="scene" aria-label="感谢信">
+  <section id="scene3" class="scene" aria-label="信的另一面">
 
     <!-- 晨曦光尘 -->
     <div class="dust-layer" aria-hidden="true">
@@ -125,8 +125,15 @@
       <span class="dust d10"></span><span class="dust d11"></span><span class="dust d12"></span>
     </div>
 
-    <!-- 感谢信卡片 -->
-    <article class="thankyou-card">
+    <!-- 信的背面提示（音频结束后出现） -->
+    <div class="back-side-hint" id="back-side-hint">
+      <div class="folded-env-icon" aria-hidden="true">📩</div>
+      <p class="back-side-text">信的背面，还有几句话</p>
+      <button id="btn-open-back" class="cute-btn btn-yes-glow">轻轻翻开</button>
+    </div>
+
+    <!-- 感谢信卡片（点击"轻轻翻开"后淡入） -->
+    <article class="thankyou-card" id="thankyou-card" aria-hidden="true">
       <!-- 标题 + 小狗 -->
       <div class="card-title-row">
         <h2 class="card-title">谢谢你听完这段话</h2>

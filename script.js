@@ -163,6 +163,9 @@ document.addEventListener('DOMContentLoaded', initStarfield);
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// 拆开信封后 → 场景2粒子动画结束自动播放音频
+let autoPlayArmed = false;
+
 /* ============================================
    resize 时重新生成星空
    ============================================ */
@@ -283,7 +286,7 @@ function showTooltip(x, y) {
 })();
 
 /* ============================================
-   "愿意" 按钮：信封打开 → 场景切换
+   "拆开它" 按钮：信封打开 → 场景切换
    ============================================ */
 
 (function() {
@@ -294,6 +297,7 @@ function showTooltip(x, y) {
   btnYes.addEventListener('click', function() {
     if (envelope.classList.contains('opening')) return;
     envelope.classList.add('opening');
+    autoPlayArmed = true;
 
     const delay = prefersReducedMotion ? 100 : 600;
     setTimeout(() => {
@@ -304,6 +308,23 @@ function showTooltip(x, y) {
       }
       envelope.classList.remove('opening');
     }, delay);
+  });
+})();
+
+/* ============================================
+   "轻轻翻开" 按钮：信的背面 → 感谢信淡入
+   ============================================ */
+
+(function() {
+  const btn  = document.getElementById('btn-open-back');
+  const card = document.getElementById('thankyou-card');
+  const hint = document.getElementById('back-side-hint');
+  if (!btn || !card || !hint) return;
+
+  btn.addEventListener('click', function() {
+    hint.classList.add('hidden');
+    card.classList.add('revealed');
+    card.setAttribute('aria-hidden', 'false');
   });
 })();
 
@@ -856,10 +877,18 @@ function initScene2() {
         if (scene2Phase === 'exploding') {
           scene2Phase = 'paused';
           animStartTime = ts;
-          animDuration = 1000;
+          animDuration = 600;
         } else if (scene2Phase === 'assembling') {
           scene2Phase = 'orbiting';
-          showPlayButtonUI();
+          // 自动播放模式：粒子环就位后直接开播（无需点击播放键）
+          if (autoPlayArmed) {
+            autoPlayArmed = false;
+            setTimeout(() => {
+              if (scene2Phase === 'orbiting' && !audioPlaying) playScene2Audio();
+            }, 400);
+          } else {
+            showPlayButtonUI();
+          }
         }
       }
     } else if (scene2Phase === 'paused') {
@@ -958,7 +987,7 @@ function initScene2() {
 
   /* ======== 10. 智能倒计时：摄像头可用5秒(无倒计时) / 兜底8秒(显示倒计时) ======== */
 
-  // 先不启动任何定时器，等摄像头初始化结果
+  // 先启动手势检测，等摄像头初始化结果
   updateGestureHint('正在启动摄像头…');
 
   /* ======== 11. 预加载音频 ======== */
@@ -997,7 +1026,7 @@ function initScene2() {
 
   setTimeout(tryStartCamera, 500);
 
-  /* ======== 12. Resize ======== */
+  /* ======== 14. Resize ======== */
   window.addEventListener('resize', onScene2Resize);
 }
 
